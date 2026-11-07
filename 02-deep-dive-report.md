@@ -5,13 +5,6 @@
 > **Khách hàng nội bộ:** Trung tâm Điều hành An ninh mạng Vingroup (**VinSOC**)  
 > **Bài toán chọn từ Phase 2:** Quick Problem Card #1 (VinSOC — cập nhật lỗ hổng mới hàng ngày)
 
-### Thành viên nhóm
-
-| Họ và tên | MSSV | Vai trò trên báo cáo |
-|-----------|------|----------------------|
-| Phạm Nguyễn Tất Đạt | 2A202603401 | Scoping, 6-field, AI Fit, Evaluate |
-
-*(Trưởng nhóm bổ sung hàng thành viên còn lại trước khi merge `main`.)*
 
 ---
 
