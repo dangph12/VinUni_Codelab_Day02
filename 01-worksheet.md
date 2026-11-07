@@ -63,7 +63,7 @@ Hãy sử dụng **4 Lenses** dưới đây để quét qua hoạt động vận
 ### 📝 List bài toán của tôi:
 | # | Subsidiary (VinFast/Xanh SM...) | Lens | Mô tả ngắn bài toán |
 |---|----------------------------------|------|---------------------|
-| 1 | | | |
+| 1 |Vinhomes |Lặp lại | Phân loại tự động các khiếu nại (ví dụ: mất nước, hỏng đèn, tiếng ồn) gửi qua App Vinhomes Resident đến đúng ban quản lý hoặc đội kỹ thuật của từng tòa nhà.|
 | 2 | | | |
 | 3 | | | |
 | 4 | | | |
@@ -77,24 +77,25 @@ Chọn **top 3 bài toán** từ danh sách trên và hoàn thiện **3 Quick Pr
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ QUICK PROBLEM CARD #___                                     │
+│ QUICK PROBLEM CARD #Phân loại & Điều hướng phản ánh Vinhomes│
 │                                                             │
-│ Bài toán (1 câu): ________________________________________  │
-│ Công ty thành viên: [ ] VinFast  [ ] Xanh SM  [ ] Vinhomes  │
+│ Bài toán (1 câu): Phân loại phản ánh cư dân Vinhomes        │
+│ Công ty thành viên: [ ] VinFast  [ ] Xanh SM  [X] Vinhomes  │
 │                     [ ] Vinmec   [ ] Khác (Ghi rõ)________  │
 │                                                             │
-│ Ai đang đau (Actor)? ______________________________________ │
+│ Ai đang đau (Actor)? Nhân viên CSKH / Ban Quản Lý           │
 │                                                             │
 │ Workflow thủ công hiện tại (3-5 bước):                      │
-│   1. ___ ──> 2. ___ ──> 3. ___ ──> 4. ___                   │
+│   1. Cư dân gửi phản ánh ──> 2. nhân viên mở ra đọc thủ công để phân loại ──> 3. Xác định phản ánh và tìm tòa nhà/ số phòng ──> 4. chuyển sang cho thợ / người thực thi │
 │                                                             │
-│ Bước nào tốn thời gian/lỗi nhất? ___ (⏱ ___ phút/lượt)      │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? _____________________ │
+│ Bước nào tốn thời gian/lỗi nhất? bước 2 và 3 (⏱ 10-15p phút/lượt)      │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2 và 3 (AI tự phân loại và gửi đến người nhận) │
 │                                                             │
-│ Đo thành công bằng gì (Metric có số)? ______________________ │
+│ Đo thành công bằng gì (Metric có số)? Giảm thời gian phân loại phản ánh từ 10 phút xuống < 30 giây│
+│ và đạt độ chính xác phân loại nhóm lỗi >= 90%.│
 │   VD: "Giảm thời gian soạn phản hồi từ 10 min ──> under 2 min"│
 │                                                             │
-│ Quick Architecture: [ ] No AI  [ ] Rule  [ ] LLM  [ ] Agent │
+│ Quick Architecture: [ ] No AI  [ ] Rule  [X] LLM  [ ] Agent │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -113,24 +114,36 @@ Chọn **top 3 bài toán** từ danh sách trên và hoàn thiện **3 Quick Pr
 * 🔄 **Handoff:** Điểm chuyển giao thông tin giữa người và hệ thống, hoặc giữa các bộ phận.
 * Ghi rõ thời gian vận hành trung bình: **Tổng cộng = ____ phút/lượt**.
 
+   - Bước 1: Cư dân nhập nội dung phàn nàn trên app (⏱ 1 phút).
+   - Bước 2 (🔴 Bottleneck): Hàng trăm tin nhắn đổ về, nhân viên CSKH đọc thủ công từng dòng để lọc xem đây là lỗi điện nước, an ninh hay vệ sinh (⏱ 8 phút).
+   - Bước 3 (🔴 Bottleneck): Tra cứu thủ công xem căn hộ đó thuộc tòa nào, ai là kỹ sư phụ trách ca trực (⏱ 4 phút).
+   - Bước 4: Gửi thông tin sang bộ phận liên quan (⏱ 2 phút).
+   => Tổng thời gian xử lý thủ công: Khoảng 15 phút cho một yêu cầu ban đầu.
+
 ## 3.2. Problem Statement (6-field) & Metrics (15 min)
 Điền đầy đủ 6 trường thông tin của bài toán:
 
 | Field | Nội dung chi tiết |
 |---|---|
-| **1. Actor / Operator** | Ai đang thực hiện tác vụ hằng ngày? |
-| **2. Current Workflow** | Mô tả tóm tắt quy trình thủ công hiện tại và công cụ sử dụng. |
-| **3. Bottleneck** | Bước nào chậm, lỗi, hoặc cần xử lý ngôn ngữ tự động nhiều nhất? |
-| **4. Business Impact** | Tổn thất thực tế đo bằng thời gian, chi phí, hoặc SLA của Vingroup. |
-| **5. Success Metric** | AI giải quyết được thì đạt ngưỡng số mấy? (Ví dụ: *"85% vé được phân loại dưới 10s"*). |
-| **6. Operational Boundary** | AI được phép làm gì, TUYỆT ĐỐI không được làm gì, điểm nào cần duyệt? |
+| **1. Actor / Operator** | Ai đang thực hiện tác vụ hằng ngày? | Nhân viên CSKH & Ban quản lý cụm tòa nhà Vinhomes
+| **2. Current Workflow** | Mô tả tóm tắt quy trình thủ công hiện tại và công cụ sử dụng. | Xử lý thủ công qua app và phân loại đến cho đối tượng thực thi
+| **3. Bottleneck** | Bước nào chậm, lỗi, hoặc cần xử lý ngôn ngữ tự động nhiều nhất? | Khâu đọ hiểu và gán nhãn phân loại bị quá tải dễ dẫn đến việc nhầm bộ phận, làm chậm thời gian xử lý
+| **4. Business Impact** | Tổn thất thực tế đo bằng thời gian, chi phí, hoặc SLA của Vingroup. | Tăng thời gian chờ đợi của ư dân, tốn nhân lực trực app đọc tin nhắn rác hoặc không rõ ràng
+| **5. Success Metric** | AI giải quyết được thì đạt ngưỡng số mấy? (Ví dụ: *"85% vé được phân loại dưới 10s"*). | Tỉ lệ phân loại đúng bộ phận chuyên trách đạt trên 90%. Thời gian từ lúc cư dân gửi đến khi chuyển đúng đội kỹ thuật rút gọn dưới 1 phút
+| **6. Operational Boundary** | AI được phép làm gì, TUYỆT ĐỐI không được làm gì, điểm nào cần duyệt? | AI được phép đọc hiểu văn bản, gán nhãn danh mục (điện/ nước/ an ninh/ khác) và soạn sẵn bản điều phối dạng draft. Cấm AI không được tự ý gửi tin nhắn phản hòi trực tiếp cho cư dân hoặc tự ý đóng ticket khi chưa có sự kiểm duyệt của nhân viên
 
 ## 3.3. Future-State Flow & AI Fit (25 min)
-* **Xác định mức AI Fit (AI-Fit Matrix):** Giải pháp thuộc nhóm nào? [ ] Rule / State-Machine [ ] LLM Feature [ ] Agentic Loop.
+* **Xác định mức AI Fit (AI-Fit Matrix):** Giải pháp thuộc nhóm nào? [ ] Rule / State-Machine [X] LLM Feature [ ] Agentic Loop.
 * **Vẽ Future-State Flow:** Đánh dấu rõ:
   * 🔵 **AI Step:** Tác vụ LLM xử lý.
   * 🟢 **Human Step (HITL):** Bước con người phê duyệt/review (Human-in-the-loop).
   * ↩️ **Fallback:** Kế hoạch dự phòng khi LLM trả về kết quả lỗi hoặc không tự tin.
+
+   Luồng tương lai: 
+   1. Cư dân gửi phản ánh  
+   2. [🔵 AI Step] AI tự động đọc, phân loại nhóm lỗi và gán đúng phòng ban 
+   3. [🟢 HITL Step] Nhân viên CSKH nhìn màn hình, bấm nút "Phê duyệt" (Approve) 
+   4. Hệ thống tự động đẩy việc cho đội kỹ thuật. Nếu AI phân loại sai, nhân viên bấm sửa tay (Fallback).
 
 ---
 
@@ -160,7 +173,7 @@ Chọn **top 3 bài toán** từ danh sách trên và hoàn thiện **3 Quick Pr
 3. [ ] Stakeholders sẵn sàng thay đổi quy trình làm việc cũ?
 
 ### Quyết định cuối cùng của Ban Giám Đốc Vin Smart Future:
-[ ] **GO (Bắt đầu xây dựng Prototype):** Bắt đầu phát triển với scope hẹp.
+[X] **GO (Bắt đầu xây dựng Prototype):** Bắt đầu phát triển với scope hẹp.
 [ ] **NOT YET (Cần tích lũy thêm dữ liệu/xác lập baseline):** Trì hoãn để chuẩn bị thêm.
 [ ] **NO-GO (Không khả thi / Rule-based tốt hơn):** Hủy bỏ dự án AI này.
 
