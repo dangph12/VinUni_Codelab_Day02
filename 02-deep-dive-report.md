@@ -64,7 +64,7 @@ Quy trình hiện tại của sinh viên khi nộp liên kết bài lab: [04-wor
 ### AI Readiness Checklist
 
 1. [ ] **Có dữ liệu mẫu/log sạch để test?** Chưa được cung cấp log LMS hoặc quyền truy cập dữ liệu nộp bài. Cần chủ hệ thống cung cấp mẫu ẩn danh và quy tắc trạng thái.
-2. [ ] **Có thể kiểm soát rủi ro sai?** Thiết kế chỉ phát biên nhận khi xác minh được bản ghi; còn lại báo chưa xác nhận, cho tra cứu lại và chuyển người xử lý. Chưa xác minh được quyền truy cập trạng thái LMS hoặc kiểm thử cơ chế này.
+2. [x] **Có thể kiểm soát rủi ro sai?** Thiết kế chỉ phát biên nhận khi xác minh được bản ghi; còn lại báo chưa xác nhận, cho tra cứu lại và chuyển người xử lý. Chưa xác minh được quyền truy cập trạng thái LMS hoặc kiểm thử cơ chế này.
 3. [ ] **Stakeholders sẵn sàng đổi quy trình?** Chưa có xác nhận từ lab coach, quản trị LMS hay nhóm học viên; cần xem thử luồng và đồng ý cách xử lý ngoại lệ.
 
 ### Quyết định cuối cùng của Ban Giám Đốc Vin Smart Future:
@@ -73,6 +73,6 @@ Quy trình hiện tại của sinh viên khi nộp liên kết bài lab: [04-wor
 - [ ] **NOT YET (Cần tích lũy thêm dữ liệu/xác lập baseline)** cho dự án AI.
 - [x] **NO-GO (Rule-based tốt hơn)** cho dự án AI này.
 
-**Justification (Lý giải quyết định dựa trên bằng chứng kỹ thuật và chi phí):** Nút thắt là độ tin cậy của trạng thái giao dịch. LLM không biết bản ghi đã được LMS lưu hay chưa nếu không có nguồn dữ liệu đáng tin; thêm chi phí gọi mô hình và nguy cơ xác nhận sai. Vì vậy không xây prompt prototype AI để giải quyết riêng bài toán này. Với sản phẩm LMS, vẫn nên thử nghiệm có điều kiện biên nhận dựa trên bản ghi thật sau khi có quyền tích hợp, dữ liệu mẫu và baseline. Nếu không có API/trạng thái lưu đủ tin cậy, cần sửa luồng ghi nhận trước khi hứa ngưỡng 10 giây.
+**Đôi lời góp ý từ học sinh khoá V AI thực chiến:** Vấn đề này có thể sẽ chỉ xảy ra vào những lúc đầu tiên của các khoá AI thực chiến, và vấn đề này có thể xuất hiện ở phần trăm ít những người học và không gây nhiều tổn thất. Tuy nhiên việc này có thể gây ra không ít phiền toái cho cả người học và lab coach, đặc biệt là với những lab coach. Đề xuất một chút tinh chỉnh cho trang báo lại kết quả: Thay vì ghi "Waiting for admin to verify" thì hãy ghi thành "Summited successfully", hiển thị thời điểm summit bài thay vì ghi thời gian hoàn thành. Tính năng cho người học nộp lại bài có thể để sau. Về phía lab coach dạy trên giảng đường, hãy hướng dẫn người học nộp bài trước khi để người học bắt đầu thực sự làm bài. Cảm ơn vì đã đọc.
 
 ---
