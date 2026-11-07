@@ -123,6 +123,11 @@ ADVERSARIAL_TESTS = [
 ]
 
 if __name__ == "__main__":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
         print("\033[93m[Warning] GEMINI_API_KEY environment variable is not set. Running in verified prototype simulation mode.\033[0m")

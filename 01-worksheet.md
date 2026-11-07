@@ -39,24 +39,23 @@ Trong buổi Lab hôm nay, nhóm chúng tôi đóng vai trò là **AI Product En
 ┌─────────────────────────────────────────────────────────────┐
 │ QUICK PROBLEM CARD #1                                       │
 │                                                             │
-│ Bài toán (1 câu): Đọc email đặt phòng đoàn phức tạp, tự     │
-│ động đối chiếu phòng trống trên PMS Opera và tạo draft đơn. │
+│ Bài toán (1 câu): Đọc advisory/CVE mới mỗi ca, map tài sản  │
+│ Vingroup, sinh ticket nháp [DRAFT_ONLY] cho analyst duyệt.  │
 │ Công ty thành viên: [ ] VinFast  [ ] Xanh SM  [ ] Vinhomes  │
-│                     [ ] Vinmec   [x] Khác: Vinpearl         │
+│                     [ ] Vinmec   [x] Khác: VinSOC           │
 │                                                             │
-│ Ai đang đau (Actor)? Nhân viên Đặt phòng (Reservation Ops)  │
+│ Ai đang đau (Actor)? SOC Analyst ca ngày/ca đêm VinSOC      │
 │                                                             │
 │ Workflow thủ công hiện tại (5 bước):                        │
-│   1. Nhận email đoàn ──> 2. Đọc bóc tách thông tin ──>      │
-│   3. Tra cứu PMS Opera ──> 4. Tính giá báo giá ──>          │
-│   5. Gõ lệnh tạo booking nháp trên PMS                      │
+│   1. Hốt advisory ──> 2. Đọc bóc CVE/CVSS ──>               │
+│   3. Map CMDB ──> 4. Viết ticket ──> 5. Gán đội vá          │
 │                                                             │
-│ Bước nào tốn thời gian/lỗi nhất? Bước 2, 3, 5 (⏱ 26 phút)   │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2, 3, 5 (Trích   │
-│ xuất thông tin -> Tra cứu API -> Sinh draft booking)        │
+│ Bước nào tốn thời gian/lỗi nhất? Bước 2, 3, 4 (⏱ 25 phút)   │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2, 3, 4 (NER     │
+│ advisory -> gợi ý đơn vị -> ticket [DRAFT_ONLY])            │
 │                                                             │
 │ Đo thành công bằng gì (Metric có số)?                        │
-│   Giảm thời gian xử lý từ 35 phút ──> dưới 5 phút/booking.  │
+│   Giảm thời gian intake từ 30 phút ──> dưới 5 phút/advisory.│
 │                                                             │
 │ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM  [ ] Agent │
 └─────────────────────────────────────────────────────────────┘
@@ -66,14 +65,14 @@ Trong buổi Lab hôm nay, nhóm chúng tôi đóng vai trò là **AI Product En
 ┌─────────────────────────────────────────────────────────────┐
 │ QUICK PROBLEM CARD #2                                       │
 │                                                             │
-│ Bài toán (1 câu): Tổng hợp và cảnh báo review khẩn cấp của  │
-│ khách hàng trên các trang OTA gửi Ban quản lý Vinpearl.     │
-│ Công ty thành viên: [x] Vinpearl                            │
-│ Ai đang đau? Giám đốc Vận hành Khách sạn, Chăm sóc Khách hàng│
-│ Workflow thủ công: Quét từng trang -> Đọc dịch -> Lập Excel │
-│ Bước tốn nhất: Đọc và dịch review đa ngôn ngữ (60 phút)     │
-│ AI hỗ trợ: Tự động dịch và gom cụm khiếu nại nghiêm trọng   │
-│ Metric: Rút ngắn thời gian phát hiện từ 24h ──> dưới 30 phút│
+│ Bài toán (1 câu): Phân loại phản ánh cư dân App Resident,    │
+│ đẩy đúng BQL tòa, sinh câu trả lời nháp cho CSKH duyệt.     │
+│ Công ty thành viên: [x] Vinhomes                            │
+│ Ai đang đau? CSKH App Resident, Ban Quản lý tòa             │
+│ Workflow thủ công: Đọc ticket -> Đoán loại -> Chuyển tòa    │
+│ Bước tốn nhất: Gắn nhãn + route đúng tòa (8–12 phút)        │
+│ AI hỗ trợ: LLM gắn nhãn + draft reply [DRAFT_ONLY]          │
+│ Metric: Route đúng tòa 12 phút ──> dưới 2 phút              │
 │ Quick Architecture: [x] LLM Feature                         │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -99,29 +98,29 @@ Trong buổi Lab hôm nay, nhóm chúng tôi đóng vai trò là **AI Product En
 
 ## 3.1. Current-State Workflow Mapping
 *(Chi tiết xem file sơ đồ trực quan `04-workflow-diagram.png` và báo cáo `02-deep-dive-report.md`)*
-* 🔴 **Bottleneck:** Bước 2 (Trích xuất thông tin đoàn - 8 phút), Bước 3 (Tra cứu quỹ phòng PMS Opera - 10 phút), Bước 5 (Gõ dữ liệu tạo booking - 8 phút).
-* 🔄 **Handoff:** Khách/Đại lý ──> Email ──> Nhân viên Đặt phòng ──> PMS Opera ──> Email phản hồi.
-* **Tổng thời gian xử lý trung bình:** **35 phút/booking đoàn**.
+* 🔴 **Bottleneck:** Bước 2 (Đọc advisory - 10 phút), Bước 3 (Map CMDB - 8 phút), Bước 4 (Viết ticket - 7 phút).
+* 🔄 **Handoff:** Nguồn intel ──> Inbox VinSOC ──> Analyst ──> Jira/SNOW ──> Đội vá đơn vị.
+* **Tổng thời gian xử lý trung bình:** **30 phút/advisory**.
 
 ## 3.2. Problem Statement (6-field) & Metrics
 
 | Field | Nội dung chi tiết |
 |---|---|
-| **1. Actor / Operator** | Chuyên viên Đặt phòng (Reservation Officer) và Sales B2B Vinpearl. |
-| **2. Current Workflow** | Nhận email đặt phòng đoàn từ đại lý, đọc bóc tách thủ công danh sách khách, mở PMS Opera kiểm tra phòng trống, tính giá chiết khấu B2B, soạn email báo giá và nhập tay từng trường thông tin tạo booking. Mất 35 phút. |
-| **3. Bottleneck** | Đọc hiểu văn bản email tự do, tra cứu tính khả dụng của nhiều hạng phòng cùng lúc và nhập tay vào hệ thống PMS (chiếm 26/35 phút). |
-| **4. Business Impact** | Mỗi ngày tiếp nhận 60–100 booking đoàn, tốn 35–50 giờ công/ngày. Chậm trễ phản hồi khiến rò rỉ 8–12% doanh thu vào tay đối thủ. Sai sót nhập liệu gây khiếu nại. |
-| **5. Success Metric** | - Rút ngắn thời gian xử lý từ 35 phút xuống dưới 5 phút.<br>- Tỉ lệ trích xuất chính xác thông tin phòng và số khách đạt >= 98%.<br>- 100% email booking đoàn có báo giá sơ bộ trong vòng 15 phút. |
-| **6. Operational Boundary** | AI chỉ sinh bản nháp và luôn gắn tag `[DRAFT_ONLY]` ở đầu để bắt buộc nhân viên phê duyệt (HITL). Tuyệt đối cấm tự ý xác nhận booking khi quỹ phòng ở mức nguy cấp (< 5% công suất). |
+| **1. Actor / Operator** | SOC Analyst ca ngày/ca đêm tại VinSOC. On-call nhận escalate Critical. |
+| **2. Current Workflow** | Hốt advisory NVD/mail/Slack, đọc tay CVE–CVSS–sản phẩm, map CMDB sang đơn vị Vingroup, viết ticket tiếng Việt, gán đội vá. ~30 phút/advisory. |
+| **3. Bottleneck** | Đọc PDF/mail tự do, map tên sản phẩm sang tài sản thật, soạn ticket (25/30 phút). Critical ca đêm nằm inbox đến sáng. |
+| **4. Business Impact** | 5–7 giờ công/ca chỉ để intake. ~30% ticket Critical/High trễ SLA. Đóng nhầm “không dính” thì lỗ hổng sống trên production. |
+| **5. Success Metric** | - Inbox → ticket nháp: 30 phút xuống dưới 5 phút.<br>- Trích xuất đúng CVE-ID + CVSS + sản phẩm >= 98%.<br>- 100% CVSS >= 9.0 có draft trong 15 phút. |
+| **6. Operational Boundary** | AI chỉ sinh `[DRAFT_ONLY]`. Cấm tự đóng not-affected, cấm patch. CVSS >= 9 hoặc blast radius > 5% endpoint → on-call. |
 
 ## 3.3. Future-State Flow & AI Fit
 * **AI Fit:** **LLM Feature** kết hợp Human-in-the-loop (HITL) và Rule validation.
 * **Quy trình tương lai:**
-  1. Hệ thống tự động nhận email.
-  2. 🔵 **AI Step:** Gemini LLM bóc tách thông tin thành JSON chuẩn.
-  3. 🔵 **AI & API Step:** Kiểm tra quỹ phòng trống thời gian thực trên PMS và tạo bản nháp `[DRAFT_ONLY]`.
-  4. 🟢 **HITL Step:** Nhân viên đặt phòng kiểm tra 1 phút và nhấn Duyệt (Approve).
-  5. ↩️ **Fallback:** Nếu email mờ hoặc format không xác định, chuyển về hàng đợi thủ công.
+  1. Connector ingest NVD/mail/Slack.
+  2. 🔵 **AI Step:** Gemini bóc JSON (CVE, CVSS, product) + tóm tắt tiếng Việt.
+  3. 🔵 **Rule Step:** Bucket CVSS + ngưỡng 5% blast radius + gắn `[DRAFT_ONLY]`.
+  4. 🟢 **HITL Step:** Analyst map CMDB 1–2 phút, Approve rồi gán đội vá.
+  5. ↩️ **Fallback:** PDF mờ / thiếu CVE / không map được → hàng đợi thủ công. Không đoán “không dính”.
 
 ---
 
@@ -137,14 +136,14 @@ Mã nguồn đã hoàn thiện và kiểm thử thành công tại `starter-code
 # 🏁 Phase 5 — EVALUATE (Nhóm, 20 min)
 
 ### AI Readiness Checklist:
-1. [x] Chúng tôi có sẵn dữ liệu mẫu/logs sạch để test (Lịch sử email booking và dữ liệu PMS Opera).
-2. [x] Rủi ro khi AI sai có nằm trong tầm kiểm soát (Bảo vệ bằng thẻ `[DRAFT_ONLY]` + HITL + Fallback).
-3. [x] Stakeholders sẵn sàng thay đổi quy trình làm việc cũ (Bộ phận Đặt phòng rất ủng hộ vì giảm tải việc thủ công).
+1. [x] Chúng tôi có sẵn dữ liệu mẫu/logs sạch để test (NVD + mail vendor để gắn nhãn CVE/CVSS/product).
+2. [x] Rủi ro khi AI sai có nằm trong tầm kiểm soát (`[DRAFT_ONLY]` + cấm auto-close + cấm patch + HITL + Fallback).
+3. [x] Stakeholders sẵn sàng thay đổi quy trình làm việc cũ (Analyst VinSOC ủng hộ vì cắt khâu đọc PDF/copy CVSS).
 
-### Quyết định cuối cùng của Ban Giám Đốc Vin Smart Future:
-[x] **GO (Bắt đầu xây dựng Prototype & Triển khai Thí điểm):** Triển khai thí điểm tại Vinpearl Resort & Spa Nha Trang trong 4 tuần.
+### Quyết định cuối cùng của Ban Giám đốc Vin Smart Future:
+[x] **GO (Bắt đầu xây dựng Prototype & Triển khai Thí điểm):** Thí điểm 4 tuần luồng advisory NVD + mail vendor, chỉ sinh ticket nháp.
 
-**Justification:** ROI cực cao (giảm 85% thời gian xử lý, tăng tỉ lệ chuyển đổi booking lên 10%), chi phí vận hành API rất nhỏ, ranh giới an toàn kiểm soát chặt chẽ ngăn chặn triệt để nguy cơ overbooking.
+**Justification:** Giảm ~85% thời gian intake (30 phút → dưới 5 phút), Critical ca đêm có draft trong 15 phút, ranh giới cứng chặn auto-patch / auto-close. Production rộng chờ CMDB sạch và đo 98% trên advisory thật.
 
 ---
 
