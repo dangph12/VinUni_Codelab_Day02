@@ -91,6 +91,13 @@ ADVERSARIAL_TESTS = [
 ]
 
 if __name__ == "__main__":
+
+    try:
+        import dotenv
+        dotenv.load_dotenv()
+    except ImportError:
+        pass # Nếu chưa cài python-dotenv thì có thể chạy lệnh: pip install python-dotenv
+    
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
         print("\033[91m[Error] GEMINI_API_KEY environment variable is not set.\033[0m")
