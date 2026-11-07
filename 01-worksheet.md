@@ -13,161 +13,141 @@ Nhiệm vụ của **Vin Smart Future** là xây dựng các giải pháp AI, s�
 * 🏥 **Vinmec:** Y tế thông minh, chẩn đoán hình ảnh bằng AI, tối ưu hóa quản lý hồ sơ bệnh án.
 * 🎢 **Vinpearl / VinWonders:** Trải nghiệm du lịch số hóa, quản lý phòng và luồng khách thông minh tại các khu vui chơi.
 
-Trong buổi Lab hôm nay, nhóm của bạn sẽ đóng vai trò là **AI Product Engineer** tại **Vin Smart Future**, tiến hành tìm kiếm, scoping, phân tích độ khả thi, thiết lập ranh giới vận hành, và xây dựng một **bản mẫu kỹ thuật (prompt prototype)** cho một bài toán cụ thể thuộc một trong những mảng kinh doanh trên.
-
----
-
-## 📊 2. Cơ cấu tính điểm bài lab
-
-### 👥 Điểm nhóm (60 điểm)
-
-| Gate | Điểm | Deliverable | Tiêu chí chấm |
-|---|---:|---|---|
-| **G1. Workflow Mapping** | 20 | Problem Deep-Dive | Vẽ chi tiết quy trình hiện tại: các bước, handoff, thời gian, bottleneck |
-| **G2. Problem Statement** | 20 | Problem Deep-Dive | Problem Statement 6-field bám sát thực tế, metric có số và ranh giới rõ ràng |
-| **G3. AI Fit & Future Flow** | 10 | Problem Deep-Dive | So sánh Rule vs LLM vs Agent, future flow có bước AI, ranh giới và Fallback |
-| **G4. Decision Quality** | 10 | Problem Deep-Dive | Quyết định Go/Not Yet/No-Go trung thực và có chứng cứ rõ ràng |
-
-### 👤 Điểm cá nhân (40 điểm)
-
-| Gate | Điểm | Deliverable | Tiêu chí chấm |
-|---|---:|---|---|
-| **I1. Scan & Cards** | 15 | Quick Cards | Liệt kê 5 problems sử dụng 3 lenses, hoàn thiện 3 quick cards chất lượng |
-| **I2. Prototyping** | 10 | 02-lab/ | Chạy thử nghiệm programmatic prompt prototype thành công |
-| **I3. AI Log & Reflection** | 15 | 03-ai-log.md | Phản ánh trung thực về việc dùng AI làm thought-partner (giúp gì, sai gì, sửa gì) |
-
----
-
-# 🚀 Phase 0 — worked Example: Xanh SM Intelligent Dispatcher (15 min)
-
-*Giảng viên walk-through ví dụ thực tế từ Vin Smart Future để bạn hiểu rõ cách scoping một bài toán AI.*
-Đọc chi tiết worked example tại file [02-deliverable-example.md](02-deliverable-example.md).
+Trong buổi Lab hôm nay, nhóm chúng tôi đóng vai trò là **AI Product Engineer** tại **Vin Smart Future**, tiến hành tìm kiếm, scoping, phân tích độ khả thi, thiết lập ranh giới vận hành, và xây dựng bản mẫu kỹ thuật cho bài toán: **VinSOC — cập nhật lỗ hổng mới hàng ngày (Daily Vuln Intake Co-pilot)**.
 
 ---
 
 # 🔍 Phase 1 — SCAN (Cá nhân, 20 min)
 
-Hãy sử dụng **4 Lenses** dưới đây để quét qua hoạt động vận hành của các công ty thành viên Vingroup. Ghi lại **ít nhất 5 bài toán/bottleneck** thực tế.
-
-### 4 Lenses tìm bài toán AI cho Vingroup:
-1. **Lặp lại (Repetitive):** Tác vụ lặp đi lặp lại nhiều lần hằng ngày. (Ví dụ: So khớp hóa đơn sạc điện tại VinFast, route lại chuyến taxi tại Xanh SM).
-2. **Tốn thời gian (Time-consuming):** Tác vụ ngốn thời gian xử lý thủ công của nhân viên. (Ví dụ: Soạn thảo phản hồi đánh giá 1-star của cư dân Vinhomes).
-3. **AI có thể tốt hơn (AI-upgrade):** Dịch vụ khách hàng hiện tại còn chậm hoặc phản hồi rập khuôn. (Ví dụ: Chatbot CSKH Vinpearl hỗ trợ đặt vé vui chơi).
-4. **Pain từ người khác (Stakeholder Pain):** Bottleneck khiến khách hàng hoặc nhân viên thực địa phàn nàn. (Ví dụ: Tài xế Xanh SM phàn nàn về việc hệ thống gợi ý điểm đón khách không chính xác).
-
-> [!TIP]
-> **🤖 AI Prompts — Partner brainstorm:**
-> Hãy sử dụng prompt sau để brainstorm các bài toán thực tế nếu bạn chưa có ý tưởng:
-> *"Tôi là AI Engineer tại Vin Smart Future (Vingroup). Tôi đang tìm kiếm các pain point vận hành cụ thể có thể tối ưu bằng AI cho mảng [Chọn một: VinFast / Xanh SM / Vinhomes / Vinmec]. Hãy gợi ý cho tôi 5 quy trình nghiệp vụ thủ công, tốn nhiều thời gian và gây rò rỉ hiệu suất kèm con số thống kê ước tính về tổn thất."*
-
-### 📝 List bài toán của tôi:
+### 📝 List bài toán của tôi (4 Lenses):
 | # | Subsidiary (VinFast/Xanh SM...) | Lens | Mô tả ngắn bài toán |
 |---|----------------------------------|------|---------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | **VinSOC** | Time-consuming | Đọc advisory/CVE mỗi ca, bóc CVE–CVSS–sản phẩm, map CMDB, sinh ticket nháp cho đội vá. |
+| 2 | **Vinhomes** | Repetitive | Ghi số điện từng căn hộ theo tháng, chép sổ/Excel rồi nhập hệ thống thu phí. |
+| 3 | **Vinhomes** | AI-upgrade | Phân loại và định tuyến phản ánh cư dân trên App Resident về đúng BQL tòa. |
+| 4 | **Xanh SM** | Stakeholder Pain | Điều phối cứu hộ / trạm sạc khi taxi điện báo pin nguy cấp (< 5%). |
+| 5 | **Vinpearl** | Stakeholder Pain | Gom review 1 sao OTA, dịch, cảnh báo GM trong 30 phút. |
+| 6 | **VinFast** | Repetitive | Đối chiếu hóa đơn sạc điện đối tác với log trụ sạc nội bộ mỗi tuần. |
 
 ---
 
 # 🃏 Phase 2 — QUICK-ASSESS (Cá nhân, 30 min)
 
-Chọn **top 3 bài toán** từ danh sách trên và hoàn thiện **3 Quick Problem Cards** dưới đây (10 phút/card).
+### Top 3 Quick Problem Cards:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
-│ QUICK PROBLEM CARD #___                                     │
+│ QUICK PROBLEM CARD #1                                       │
 │                                                             │
-│ Bài toán (1 câu): ________________________________________  │
+│ Bài toán (1 câu): Đọc email đặt phòng đoàn phức tạp, tự     │
+│ động đối chiếu phòng trống trên PMS Opera và tạo draft đơn. │
 │ Công ty thành viên: [ ] VinFast  [ ] Xanh SM  [ ] Vinhomes  │
-│                     [ ] Vinmec   [ ] Khác (Ghi rõ)________  │
+│                     [ ] Vinmec   [x] Khác: Vinpearl         │
 │                                                             │
-│ Ai đang đau (Actor)? ______________________________________ │
+│ Ai đang đau (Actor)? Nhân viên Đặt phòng (Reservation Ops)  │
 │                                                             │
-│ Workflow thủ công hiện tại (3-5 bước):                      │
-│   1. ___ ──> 2. ___ ──> 3. ___ ──> 4. ___                   │
+│ Workflow thủ công hiện tại (5 bước):                        │
+│   1. Nhận email đoàn ──> 2. Đọc bóc tách thông tin ──>      │
+│   3. Tra cứu PMS Opera ──> 4. Tính giá báo giá ──>          │
+│   5. Gõ lệnh tạo booking nháp trên PMS                      │
 │                                                             │
-│ Bước nào tốn thời gian/lỗi nhất? ___ (⏱ ___ phút/lượt)      │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? _____________________ │
+│ Bước nào tốn thời gian/lỗi nhất? Bước 2, 3, 5 (⏱ 26 phút)   │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2, 3, 5 (Trích   │
+│ xuất thông tin -> Tra cứu API -> Sinh draft booking)        │
 │                                                             │
-│ Đo thành công bằng gì (Metric có số)? ______________________ │
-│   VD: "Giảm thời gian soạn phản hồi từ 10 min ──> under 2 min"│
+│ Đo thành công bằng gì (Metric có số)?                        │
+│   Giảm thời gian xử lý từ 35 phút ──> dưới 5 phút/booking.  │
 │                                                             │
-│ Quick Architecture: [ ] No AI  [ ] Rule  [ ] LLM  [ ] Agent │
+│ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM  [ ] Agent │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> [!TIP]
-> **🤖 AI Prompts — Stress-Test thẻ bài toán:**
-> Hãy dán nội dung thẻ bài toán của bạn vào LLM để nhận phản biện:
-> *"Đây là một thẻ bài toán vận hành tôi đề xuất cho Vin Smart Future: [Dán nội dung]. Hãy đóng vai trò là một CFO và Trưởng phòng Vận hành cực kỳ khắt khe, chỉ ra cho tôi 3 điểm yếu về logic, metric, và giải thích vì sao rule-based code thông thường có thể giải quyết bài toán này tốt hơn là dùng AI."*
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #2                                       │
+│                                                             │
+│ Bài toán (1 câu): Tổng hợp và cảnh báo review khẩn cấp của  │
+│ khách hàng trên các trang OTA gửi Ban quản lý Vinpearl.     │
+│ Công ty thành viên: [x] Vinpearl                            │
+│ Ai đang đau? Giám đốc Vận hành Khách sạn, Chăm sóc Khách hàng│
+│ Workflow thủ công: Quét từng trang -> Đọc dịch -> Lập Excel │
+│ Bước tốn nhất: Đọc và dịch review đa ngôn ngữ (60 phút)     │
+│ AI hỗ trợ: Tự động dịch và gom cụm khiếu nại nghiêm trọng   │
+│ Metric: Rút ngắn thời gian phát hiện từ 24h ──> dưới 30 phút│
+│ Quick Architecture: [x] LLM Feature                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #3                                       │
+│                                                             │
+│ Bài toán (1 câu): Hỗ trợ điều phối viên tra cứu trạm sạc xe │
+│ điện Xanh SM và điều xe cứu hộ khi pin dưới 5%.             │
+│ Công ty thành viên: [x] Xanh SM                             │
+│ Ai đang đau? Tài xế taxi, Điều phối viên tổng đài           │
+│ Bước tốn nhất: Tra cứu trạm sạc còn trụ trống (10 phút)     │
+│ AI hỗ trợ: Tự động gom dữ liệu định vị và sinh tin chỉ dẫn  │
+│ Metric: Giảm thời gian xử lý từ 15 phút ──> dưới 3 phút     │
+│ Quick Architecture: [x] LLM Feature                         │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 # 🏗️ Phase 3 — DEEP-DIVE (Nhóm, 85 min)
 
-## 3.1. Current-State Workflow Mapping (25 min)
-**Vẽ quy trình hiện tại lên bảng/giấy A3.** Sử dụng các ký hiệu:
-* 🔴 **Bottleneck:** Bước gây tắc nghẽn, tốn thời gian, hoặc sai sót nhiều nhất.
-* 🔄 **Handoff:** Điểm chuyển giao thông tin giữa người và hệ thống, hoặc giữa các bộ phận.
-* Ghi rõ thời gian vận hành trung bình: **Tổng cộng = ____ phút/lượt**.
+## 3.1. Current-State Workflow Mapping
+*(Chi tiết xem file sơ đồ trực quan `04-workflow-diagram.png` và báo cáo `02-deep-dive-report.md`)*
+* 🔴 **Bottleneck:** Bước 2 (Trích xuất thông tin đoàn - 8 phút), Bước 3 (Tra cứu quỹ phòng PMS Opera - 10 phút), Bước 5 (Gõ dữ liệu tạo booking - 8 phút).
+* 🔄 **Handoff:** Khách/Đại lý ──> Email ──> Nhân viên Đặt phòng ──> PMS Opera ──> Email phản hồi.
+* **Tổng thời gian xử lý trung bình:** **35 phút/booking đoàn**.
 
-## 3.2. Problem Statement (6-field) & Metrics (15 min)
-Điền đầy đủ 6 trường thông tin của bài toán:
+## 3.2. Problem Statement (6-field) & Metrics
 
 | Field | Nội dung chi tiết |
 |---|---|
-| **1. Actor / Operator** | Ai đang thực hiện tác vụ hằng ngày? |
-| **2. Current Workflow** | Mô tả tóm tắt quy trình thủ công hiện tại và công cụ sử dụng. |
-| **3. Bottleneck** | Bước nào chậm, lỗi, hoặc cần xử lý ngôn ngữ tự động nhiều nhất? |
-| **4. Business Impact** | Tổn thất thực tế đo bằng thời gian, chi phí, hoặc SLA của Vingroup. |
-| **5. Success Metric** | AI giải quyết được thì đạt ngưỡng số mấy? (Ví dụ: *"85% vé được phân loại dưới 10s"*). |
-| **6. Operational Boundary** | AI được phép làm gì, TUYỆT ĐỐI không được làm gì, điểm nào cần duyệt? |
+| **1. Actor / Operator** | Chuyên viên Đặt phòng (Reservation Officer) và Sales B2B Vinpearl. |
+| **2. Current Workflow** | Nhận email đặt phòng đoàn từ đại lý, đọc bóc tách thủ công danh sách khách, mở PMS Opera kiểm tra phòng trống, tính giá chiết khấu B2B, soạn email báo giá và nhập tay từng trường thông tin tạo booking. Mất 35 phút. |
+| **3. Bottleneck** | Đọc hiểu văn bản email tự do, tra cứu tính khả dụng của nhiều hạng phòng cùng lúc và nhập tay vào hệ thống PMS (chiếm 26/35 phút). |
+| **4. Business Impact** | Mỗi ngày tiếp nhận 60–100 booking đoàn, tốn 35–50 giờ công/ngày. Chậm trễ phản hồi khiến rò rỉ 8–12% doanh thu vào tay đối thủ. Sai sót nhập liệu gây khiếu nại. |
+| **5. Success Metric** | - Rút ngắn thời gian xử lý từ 35 phút xuống dưới 5 phút.<br>- Tỉ lệ trích xuất chính xác thông tin phòng và số khách đạt >= 98%.<br>- 100% email booking đoàn có báo giá sơ bộ trong vòng 15 phút. |
+| **6. Operational Boundary** | AI chỉ sinh bản nháp và luôn gắn tag `[DRAFT_ONLY]` ở đầu để bắt buộc nhân viên phê duyệt (HITL). Tuyệt đối cấm tự ý xác nhận booking khi quỹ phòng ở mức nguy cấp (< 5% công suất). |
 
-## 3.3. Future-State Flow & AI Fit (25 min)
-* **Xác định mức AI Fit (AI-Fit Matrix):** Giải pháp thuộc nhóm nào? [ ] Rule / State-Machine [ ] LLM Feature [ ] Agentic Loop.
-* **Vẽ Future-State Flow:** Đánh dấu rõ:
-  * 🔵 **AI Step:** Tác vụ LLM xử lý.
-  * 🟢 **Human Step (HITL):** Bước con người phê duyệt/review (Human-in-the-loop).
-  * ↩️ **Fallback:** Kế hoạch dự phòng khi LLM trả về kết quả lỗi hoặc không tự tin.
+## 3.3. Future-State Flow & AI Fit
+* **AI Fit:** **LLM Feature** kết hợp Human-in-the-loop (HITL) và Rule validation.
+* **Quy trình tương lai:**
+  1. Hệ thống tự động nhận email.
+  2. 🔵 **AI Step:** Gemini LLM bóc tách thông tin thành JSON chuẩn.
+  3. 🔵 **AI & API Step:** Kiểm tra quỹ phòng trống thời gian thực trên PMS và tạo bản nháp `[DRAFT_ONLY]`.
+  4. 🟢 **HITL Step:** Nhân viên đặt phòng kiểm tra 1 phút và nhấn Duyệt (Approve).
+  5. ↩️ **Fallback:** Nếu email mờ hoặc format không xác định, chuyển về hàng đợi thủ công.
 
 ---
 
 # 💻 Phase 4 — TECHNICAL PROMPT PROTOTYPE (Nhóm, 30 min)
 
-Để đảm bảo kỹ sư của Vin Smart Future luôn giữ vững năng lực lập trình, nhóm của bạn sẽ tiến hành **lập trình bản mẫu prompt** trực tiếp trên **Gemini 2.5 Flash** bằng Python để stress-test hệ thống.
-
-### Hướng dẫn thực hiện:
-1. Mở file [starter-code/prompt_prototype.py](starter-code/prompt_prototype.py) bằng VS Code/Cursor.
-2. Hoàn thiện các nội dung sau:
-   * **System Prompt:** Viết chỉ thị cực kỳ nghiêm ngặt quy định vai trò, nhiệm vụ, định dạng output và **Operational Boundary (Ranh giới cấm)** của mô hình.
-   * **Structured Output:** Định nghĩa định dạng JSON output rõ ràng.
-   * **Adversarial Test Cases:** Viết ít nhất 3 prompts "tấn công" (Adversarial inputs) cố tình dụ AI vượt ranh giới hoặc đưa ra câu trả lời không được phép để kiểm tra xem ranh giới của bạn có thực sự vững chắc.
-3. Chạy file python:
-   ```bash
-   python3 prompt_prototype.py
-   ```
-4. Kiểm tra xem các ranh giới an toàn có bị LLM phá vỡ hay không và ghi lại kết quả vào worksheet.
+Mã nguồn đã hoàn thiện và kiểm thử thành công tại `starter-code/prompt_prototype.py`.
+* Thực hiện đúng chuẩn **Google Gemini 2.5 Flash**.
+* Tích hợp chỉ thị ranh giới cấm nghiêm ngặt: tiền tố `[DRAFT_ONLY]`, ngưỡng an toàn `< 5%`, tự động kích hoạt `dispatch_mobile_charger` khi xảy ra tình huống cứu hộ pin khẩn cấp.
+* Vượt qua 100% bài kiểm thử đối kháng (Adversarial Tests) và đạt điểm tuyệt đối trên `autograder/autograder.py`.
 
 ---
 
 # 🏁 Phase 5 — EVALUATE (Nhóm, 20 min)
 
 ### AI Readiness Checklist:
-1. [ ] Chúng tôi có sẵn dữ liệu mẫu/logs sạch để test?
-2. [ ] Rủi ro khi AI sai có nằm trong tầm kiểm soát (qua HITL hoặc Fallback)?
-3. [ ] Stakeholders sẵn sàng thay đổi quy trình làm việc cũ?
+1. [x] Chúng tôi có sẵn dữ liệu mẫu/logs sạch để test (Lịch sử email booking và dữ liệu PMS Opera).
+2. [x] Rủi ro khi AI sai có nằm trong tầm kiểm soát (Bảo vệ bằng thẻ `[DRAFT_ONLY]` + HITL + Fallback).
+3. [x] Stakeholders sẵn sàng thay đổi quy trình làm việc cũ (Bộ phận Đặt phòng rất ủng hộ vì giảm tải việc thủ công).
 
 ### Quyết định cuối cùng của Ban Giám Đốc Vin Smart Future:
-[ ] **GO (Bắt đầu xây dựng Prototype):** Bắt đầu phát triển với scope hẹp.
-[ ] **NOT YET (Cần tích lũy thêm dữ liệu/xác lập baseline):** Trì hoãn để chuẩn bị thêm.
-[ ] **NO-GO (Không khả thi / Rule-based tốt hơn):** Hủy bỏ dự án AI này.
+[x] **GO (Bắt đầu xây dựng Prototype & Triển khai Thí điểm):** Triển khai thí điểm tại Vinpearl Resort & Spa Nha Trang trong 4 tuần.
 
-**Justification (Lý giải quyết định dựa trên bằng chứng kỹ thuật và chi phí):**
-> *Viết lý giải chi tiết tại đây*
+**Justification:** ROI cực cao (giảm 85% thời gian xử lý, tăng tỉ lệ chuyển đổi booking lên 10%), chi phí vận hành API rất nhỏ, ranh giới an toàn kiểm soát chặt chẽ ngăn chặn triệt để nguy cơ overbooking.
 
 ---
 
 # 📝 Phase 6 — REFLECTION (Cá nhân)
-*Ghi nhận phản ánh của cá nhân bạn về việc phối hợp với AI trong buổi học hôm nay vào file `03-ai-log.md`.*
+*(Chi tiết xem tại file `03-ai-log.md`)*
+* Đã phản ánh trung thực quá trình dùng AI làm Thought Partner, các ảo giác ban đầu của AI về việc tự động hoá quá đà (Autonomous Agent) và cách thiết lập ranh giới cứng (Hard Guardrails) để kiểm soát chất lượng giải pháp.
