@@ -2,7 +2,8 @@
 
 > **Học viên:** Ngô Gia Bảo — Branch: `ngogiabao`
 > **Công cụ AI sử dụng:** Claude (Claude Code trong VS Code)
-> **Bài toán thực hiện:** VinFast Battery Swap — Xử lý tranh chấp pin trả về bị hư hỏng
+> **Bài toán thực hiện:** VinFast Battery Swap — Hỗ trợ từ xa sự cố tại tủ đổi pin không người trực
+> *(bài toán ban đầu là "Xử lý tranh chấp pin trả về bị hư hỏng" — đã đổi, lý do ở mục 2)*
 
 ---
 
@@ -16,9 +17,9 @@ Trong Lab 02, tôi dùng Claude như một trợ lý đồng hành (thought-part
 
 **Hiểu đúng yêu cầu ngay từ đầu.** Khi tôi yêu cầu "đọc repo và phân tích yêu cầu", AI không chỉ tóm tắt README mà còn đọc mã nguồn `autograder.py` để chỉ ra cách chấm điểm thực tế. Nhờ vậy tôi biết những chi tiết mà nếu chỉ đọc hướng dẫn tôi sẽ bỏ qua: script phải chạy xong trong 30 giây, chỉ cần chữ "Failed" xuất hiện ở bất kỳ đâu trong output là mất điểm phần kiểm thử ranh giới, và file `.py` không được merge vào `main`.
 
-**Mở rộng ý tưởng bài toán.** Từ một chủ đề tôi quan tâm là "đổi pin VinFast", AI tách ra thành bốn bài toán khác nhau: điều phối pin giữa các trạm, đánh giá tình trạng pin khi khách trả, xử lý tranh chấp pin hư hỏng và chatbot giải đáp gói thuê pin. Kết hợp với ba bài toán của Vinpearl/VinWonders, tôi có đủ 7 bài toán phủ cả 4 lenses.
+**Mở rộng ý tưởng bài toán.** Từ một chủ đề tôi quan tâm là "đổi pin VinFast", AI tách ra thành bốn bài toán khác nhau (bản cuối): điều phối pin giữa các tủ, phân loại pin lỗi bị tủ gắn cờ, hỗ trợ từ xa sự cố tại tủ và chatbot giải đáp gói thuê pin. Kết hợp với ba bài toán của Vinpearl/VinWonders, tôi có đủ 7 bài toán phủ cả 4 lenses.
 
-**Phản biện việc dùng AI.** Điều tôi đánh giá cao nhất là AI không cố gắn AI vào mọi bài toán. Với bài đánh giá pin khi trả về, AI chỉ ra rằng các chỉ số SoH, số chu kỳ sạc, mã lỗi đều là số liệu có cấu trúc nên một bảng ngưỡng rule-based sẽ nhanh, rẻ và dễ giải thích hơn LLM. Với bài cân bằng pin giữa các trạm, AI xác định đây là bài toán dự báo và tối ưu, không phải bài toán ngôn ngữ. Điều này giúp tôi hiểu rõ hơn tinh thần *"Problem First, AI Second"* và chọn đúng bài toán tranh chấp pin, nơi LLM thực sự có giá trị.
+**Phản biện việc dùng AI.** Điều tôi đánh giá cao nhất là AI không cố gắn AI vào mọi bài toán. Với bài phân loại pin lỗi, AI chỉ ra rằng các chỉ số SoH, số chu kỳ sạc, mã lỗi đều là số liệu có cấu trúc nên một bảng ngưỡng rule-based sẽ nhanh, rẻ và dễ giải thích hơn LLM. Với bài cân bằng pin giữa các trạm, AI xác định đây là bài toán dự báo và tối ưu, không phải bài toán ngôn ngữ. Điều này giúp tôi hiểu rõ hơn tinh thần *"Problem First, AI Second"* và tập trung vào bài toán mà phần ngôn ngữ mới là nút thắt — nơi LLM thực sự có giá trị.
 
 **Tăng tốc phần trình bày.** AI giúp dựng bảng Problem Statement 6 trường, ma trận so sánh Rule / LLM / Agent, luồng tương lai có bước AI, bước người duyệt và phương án dự phòng, cũng như vẽ sơ đồ quy trình hiện tại theo đúng ảnh mẫu. Tôi có thêm thời gian để suy nghĩ về nội dung thay vì định dạng.
 
@@ -26,27 +27,34 @@ Trong Lab 02, tôi dùng Claude như một trợ lý đồng hành (thought-part
 
 ## 2. AI đã sai hoặc "bịa" ở đâu
 
-**Số liệu không có nguồn (hallucination nguy hiểm nhất).** Tất cả các con số trong bài — 42 phút mỗi ca, 60 ca mỗi ngày, 30% khách khiếu nại lại, 40% câu hỏi lặp lại — đều do AI ước tính. Chúng nghe rất hợp lý và được trình bày tự tin, nhưng không có bất kỳ nguồn dữ liệu nào. Nếu tôi không để ý, người đọc báo cáo sẽ tưởng đó là số liệu vận hành thật của VinFast.
+**Số liệu không có nguồn (hallucination nguy hiểm nhất).** Tất cả các con số trong bài — 20 phút mỗi cuộc gọi, 300 cuộc gọi sự cố mỗi ngày, 45% xử lý xong ngay cuộc gọi đầu, 40% câu hỏi lặp lại (và trước đó là 42 phút, 60 ca/ngày của bài toán cũ) — đều do AI ước tính. Chúng nghe rất hợp lý và được trình bày tự tin, nhưng không có bất kỳ nguồn dữ liệu nào. Nếu tôi không để ý, người đọc báo cáo sẽ tưởng đó là số liệu vận hành thật của VinFast.
 
-**Kiến thức về doanh nghiệp thực tế còn hạn chế.** AI không biết chắc dịch vụ đổi pin và quy trình chăm sóc khách hàng của VinFast vận hành cụ thể ra sao. Quy trình 6 bước trong báo cáo là một mô phỏng hợp lý, chưa được kiểm chứng với người làm trong ngành.
+**Giả định sai về thực tế vận hành — lỗi nghiêm trọng nhất của buổi lab.** Toàn bộ bản đầu tiên của file 01, báo cáo Deep-Dive và sơ đồ quy trình đều được AI xây trên giả định rằng **trạm đổi pin có nhân viên**: nhân viên kiểm tra pin khách trả, chụp ảnh, tạo ticket. AI viết rất trôi chảy và không hề nói đây là giả định. Chỉ khi tôi hỏi lại *"đổi pin xe máy không có nhân viên tại trạm phải không?"*, AI mới tra cứu và xác nhận: mô hình của VinFast/V-Green dùng **tủ đổi pin tự động đặt tại cây xăng, cửa hàng đối tác, không có nhân viên trực**. Hệ quả:
+* Quick Card "nhân viên đánh giá pin khi trả" mất cơ sở (tủ đã tự đọc BMS).
+* Quy trình hiện tại của bài tranh chấp pin mô tả những bước không tồn tại — đúng phần G1 (Workflow Mapping) được chấm điểm.
+* Con số "60 ca tranh chấp/ngày" khó tin, khi một thống kê cũ của VinFast cho thấy giai đoạn đầu cả nước chỉ có vài chục lượt đổi pin mỗi tháng.
+
+Tôi quyết định **đổi bài toán Deep-Dive** sang *hỗ trợ từ xa sự cố tại tủ không người trực* — một nỗi đau sinh ra chính từ đặc điểm "không có nhân viên", và viết lại file 01, 02 cùng sơ đồ quy trình. Đây là bài học rõ nhất của tôi: một bản phân tích có cấu trúc đẹp vẫn có thể sai từ gốc nếu tiền đề về thực tế vận hành sai.
 
 **Tự suy diễn khi yêu cầu mơ hồ.** Khi tôi nói "làm phase 2 đi", Phase 2 (Quick Cards) thực ra đã có trong file 01. Thay vì hỏi lại, AI tự suy luận rằng tôi muốn file thứ hai và viết luôn báo cáo Deep-Dive. Kết quả vẫn dùng được, nhưng đó không phải điều tôi yêu cầu chính xác.
 
 **Tự phản biện chính mình.** Phần stress-test các Quick Card (đóng vai CFO khắt khe) do chính AI viết ra rồi tự trả lời, nên thiếu góc nhìn độc lập và có xu hướng "dễ dãi" với ý tưởng của chính nó.
 
-**Lỗi logic trong sơ đồ.** Bản sơ đồ đầu tiên bị chồng chữ ở các nhãn handoff. Bản thứ hai mắc lỗi logic: gắn nhãn HANDOFF giữa Bước 5 và Bước 6 trong khi cả hai bước đều do CSKH thực hiện, không có chuyển giao nào. Lỗi này rất dễ bỏ qua khi nhìn lướt.
+**Lỗi logic trong sơ đồ.** Ở sơ đồ của bài toán cũ, bản đầu tiên bị chồng chữ ở các nhãn handoff. Bản thứ hai mắc lỗi logic: gắn nhãn HANDOFF giữa hai bước đều do cùng một người (CSKH) thực hiện, không có chuyển giao nào. Lỗi này rất dễ bỏ qua khi nhìn lướt.
 
 ---
 
 ## 3. Tôi đã sửa prompt và ranh giới như thế nào
 
-**Bắt buộc gắn nhãn giả định.** Tôi yêu cầu mọi con số phải được ghi rõ là "ước tính giả định" ngay ở đầu mỗi file. Quan trọng hơn, tôi biến chính điểm yếu này thành bằng chứng cho quyết định cuối cùng: báo cáo chọn **NOT YET** thay vì GO, vì chưa có baseline thật và chưa có bộ ticket cũ để đo độ chính xác của AI. Một quyết định GO dựa trên số liệu do AI tự tạo ra sẽ không trung thực.
+**Bắt buộc gắn nhãn giả định.** Tôi yêu cầu mọi con số phải được ghi rõ là "ước tính giả định" ngay ở đầu mỗi file. Quan trọng hơn, tôi biến chính điểm yếu này thành bằng chứng cho quyết định cuối cùng: báo cáo chọn **NOT YET** thay vì GO, vì chưa có baseline thật về số cuộc gọi sự cố và chưa có lịch sử cuộc gọi để đo độ chính xác của AI — kèm một ngưỡng rõ ràng: nếu số cuộc gọi thật thấp thì bảng tra mã lỗi rule-based là đủ, không cần LLM. Một quyết định GO dựa trên số liệu do AI tự tạo ra sẽ không trung thực.
 
 **Viết prompt cụ thể hơn và đưa ví dụ mẫu.** Sau lần AI hiểu sai "phase 2", tôi rút kinh nghiệm phải nêu rõ tên file hoặc phase cần làm. Khi cần vẽ sơ đồ, thay vì mô tả bằng lời, tôi gửi kèm ảnh mẫu và yêu cầu "làm theo mẫu"; kết quả bám sát định dạng hơn hẳn. Khi AI viết bản tự luận này dưới dạng bảng, tôi nhắc lại "theo yêu cầu" để nó viết đúng dạng bài tự luận mà README yêu cầu.
 
-**Kiểm tra chéo kết quả.** Tôi đối chiếu để đảm bảo số liệu trong sơ đồ, trong bảng workflow của báo cáo và trong Quick Card khớp nhau (42 phút, bottleneck Bước 4–6 chiếm 27 phút), và yêu cầu sửa lỗi handoff sai vị trí.
+**Đặt câu hỏi về tiền đề và đòi nguồn.** Sau lỗi "trạm có nhân viên", tôi không chấp nhận mô tả quy trình của AI như sự thật nữa mà yêu cầu AI **tra cứu nguồn** và ghi link tham khảo vào báo cáo. Các thông tin về mô hình tủ đổi pin trong file 01 và 02 giờ đều có nguồn báo chí đi kèm; phần nào vẫn là giả định thì ghi rõ là giả định.
 
-**Thiết lập ranh giới cho chính sản phẩm AI.** Trải nghiệm "AI viết rất thuyết phục nhưng có thể sai" ảnh hưởng trực tiếp tới thiết kế giải pháp: AI chỉ được soạn nháp có thẻ `[DRAFT_ONLY]`, không được tự gửi tin cho khách, không được tự kết luận hay áp phí, và mọi quyết định liên quan tới tiền phải có người duyệt. Ở phần prompt prototype, tôi viết các adversarial test cố tình dụ model bỏ thẻ `[DRAFT_ONLY]` hoặc gợi ý trạm sạc xa khi pin dưới 5% để kiểm tra ranh giới có thực sự vững hay không.
+**Kiểm tra chéo kết quả.** Tôi đối chiếu để đảm bảo số liệu trong sơ đồ, trong bảng workflow của báo cáo và trong Quick Card khớp nhau (~20 phút/cuộc gọi, bottleneck Bước 3–5 chiếm 17 phút), và yêu cầu sửa lỗi handoff sai vị trí ở sơ đồ cũ.
+
+**Thiết lập ranh giới cho chính sản phẩm AI.** Trải nghiệm "AI viết rất thuyết phục nhưng có thể sai" ảnh hưởng trực tiếp tới thiết kế giải pháp: AI chỉ được soạn nháp có thẻ `[DRAFT_ONLY]`, chỉ được chọn bước hướng dẫn từ danh mục thao tác đã được kỹ thuật duyệt, không được tự gửi lệnh điều khiển tủ hay tự gửi tin cho khách, và mọi ca có dấu hiệu nguy hiểm (pin phồng, nóng, khói) bị cổng rule-based chặn trước khi tới AI. Ở phần prompt prototype, tôi viết các adversarial test cố tình dụ model bỏ thẻ `[DRAFT_ONLY]` hoặc gợi ý trạm sạc xa khi pin dưới 5% để kiểm tra ranh giới có thực sự vững hay không.
 
 **Quá trình chạy prompt prototype — chưa thuận lợi, và tôi ghi lại đúng như vậy:**
 
@@ -68,4 +76,4 @@ Trong Lab 02, tôi dùng Claude như một trợ lý đồng hành (thought-part
 
 ## Kết luận
 
-AI là một thought-partner rất tốt cho việc hiểu yêu cầu, mở rộng ý tưởng, phản biện kiến trúc và trình bày. Nhưng AI **không phải là nguồn dữ liệu** và **không thay thế được hiểu biết thực tế** về quy trình doanh nghiệp. Bài học lớn nhất của tôi là: mọi đầu ra của AI đều cần được kiểm chứng, gắn nhãn đúng mức độ tin cậy và đặt dưới sự giám sát của con người — đó cũng chính là nguyên tắc tôi áp dụng khi thiết kế giải pháp AI cho bài toán tranh chấp pin của VinFast.
+AI là một thought-partner rất tốt cho việc hiểu yêu cầu, mở rộng ý tưởng, phản biện kiến trúc và trình bày. Nhưng AI **không phải là nguồn dữ liệu** và **không thay thế được hiểu biết thực tế** về quy trình doanh nghiệp. Bài học lớn nhất của tôi là: mọi đầu ra của AI đều cần được kiểm chứng, gắn nhãn đúng mức độ tin cậy và đặt dưới sự giám sát của con người — đó cũng chính là nguyên tắc tôi áp dụng khi thiết kế giải pháp AI hỗ trợ sự cố tại tủ đổi pin của VinFast. Và bài học tôi sẽ mang theo lâu nhất đến từ một câu hỏi rất đơn giản của chính tôi — "trạm có nhân viên không?" — đủ để lật lại cả một bài toán mà AI đã trình bày rất thuyết phục.
